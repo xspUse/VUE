@@ -93,6 +93,7 @@ const addAndSub = (item: Shop, type: boolean): void => {
 const del = (index: number) => {
   data.splice(index, 1)
 }
+// 不用到处调用计算方法，依赖变了会自动改变
 $total = computed<number>(() => {
   return data.reduce((prev,next)=> {
     return prev + (next.num * next.price)
