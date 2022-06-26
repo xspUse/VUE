@@ -1,5 +1,6 @@
 <template>
     <div style="background: red; position: relative;" class="content"> 
+    <!-- 传送组件：隔绝父组件样式的影响，v-show无法对其生效，v-if可以 -->
       <Teleport to=".modal">
         <div class="loading">
           loading...
