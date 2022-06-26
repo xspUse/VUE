@@ -3,7 +3,7 @@
       <button @click="flag = !flag">切换</button>
       <!-- 自定义动画名，可结合第三方css库使用 -->
       <!-- <Transition enter-to-class="e-to" enter-active-class="e-active" enter-from-class="e-from" name="fade"> -->
-      <!-- duration：动画时间 两种方式：1. :duration="50" 2. :duration="{enter: 50, leave: 1000}"-->
+      <!-- 属性duration：动画时长 两种方式：1. :duration="50" 2. :duration="{enter: 50, leave: 1000}"-->
       <Transition :duration="{enter: 50, leave: 1000}" leave-active-class="animate__animated animate__bounce" enter-active-class="animate__animated animate__fadeIn">
         <div v-if="flag" class="box"></div>
       </Transition>
