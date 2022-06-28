@@ -9,6 +9,7 @@
 import { Directive, DirectiveBinding, ref } from 'vue'
 
 const vMove:Directive<any, void> = (el:HTMLElement, binding:DirectiveBinding) => {
+  // 获取使用这个指令下的第一个子元素，断言这个元素为div类型
   let moveElement:HTMLElement = el.firstElementChild as HTMLDivElement
   console.log(moveElement);
   const mouseDown = (e:MouseEvent) => {
