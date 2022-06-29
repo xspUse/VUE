@@ -5,17 +5,17 @@
     </A> -->
 
     <!-- 3.动态css -->
-    <div class="xm">
+    <!-- <div class="xm">
       动态css
-    </div>
+    </div> -->
 
     <!-- 4.css module -->
     <!-- 默认写法 -->
     <!-- <div :class="[$style.xm, $style.border]"> -->
     <!-- 命名写法 -->
-    <!-- <div :class="[zs.xm, zs.border]">
+    <div :class="[zs.xm, zs.border]">
       动态css
-    </div> -->
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -31,20 +31,20 @@ import { ref, useCssModule } from 'vue';
 // const style = ref('red')
 
 // 写法2 对象
-const style = ref({
-  color: 'red'
-})
+// const style = ref({
+//   color: 'red'
+// })
 
-setTimeout(() => {
-  style.value.color = 'blue'
-}, 2000)
+// setTimeout(() => {
+//   style.value.color = 'blue'
+// }, 2000)
 
 /**
  * 4.css module 场景主要用于写 tsx
  */
 // css hooks
-// const css = useCssModule('zs')
-// console.log(css);
+const css = useCssModule('zs')
+console.log(css);
 
 </script>
 
@@ -54,7 +54,7 @@ div {
   color: red;
 }
 </style> -->
-<style lang="less" scoped> 
+<!-- <style lang="less" scoped> 
 // 2.全局选择器
 // :global(div) {
 //   color: pink;
@@ -63,11 +63,12 @@ div {
 // 3.动态css
 .xm {
   // 写法1
+  // 不可以用 :(style)
   // color: v-bind(style)
   // 写法2
   color: v-bind('style.color')
 }
-</style>
+</style> -->
 
 <!-- 4.css module -->
 <!-- 默认写法 -->
@@ -79,7 +80,7 @@ div {
   border: 1px solid #ccc;
 }
 </style> -->
-<!-- 
+
 <style module="zs">
 .xm {
   color: red;
@@ -87,4 +88,4 @@ div {
 .border {
   border: 1px solid #ccc;
 }
-</style> -->
+</style>

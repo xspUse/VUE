@@ -16,10 +16,4 @@
 // :slotted(.a ){
 //   color: red;
 // }
-.A {
-  width: 200px;
-  height: 200px;
-  background: green;
-  color: #fff;
-}
 </style>
