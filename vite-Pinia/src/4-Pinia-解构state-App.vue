@@ -10,7 +10,7 @@
 import { useTestStore } from './store'
 import { storeToRefs } from 'pinia'
 const Test = useTestStore()
-// pinia 解构不具有响应式, 使用storeToRefs包裹变成响应式
+// pinia 解构不具有响应式, 使用 storeToRefs 包裹变成响应式
 const { current, name } = storeToRefs(Test)
 
 const change = () => {
