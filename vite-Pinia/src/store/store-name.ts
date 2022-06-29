@@ -1,4 +1,5 @@
 // 枚举
 export const enum Names {
-  TEST = 'TEST'
+  TEST = 'TEST',
+  BASE = 'BASE'
 }
