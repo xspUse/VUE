@@ -14,8 +14,8 @@ const div = ref<HTMLElement>()
 const change = async () => {
   message.value = 'xmzs'
   // 为了性能优化设计了nextTick
-  await nextTick()
-  console.log(div.value?.innerText);
+  await nextTick() // 不添加这一步，下面打印的是 xm
+  console.log(div.value?.innerText); // xmzs
   
 }
 </script>
