@@ -17,22 +17,23 @@ import { onMounted } from "vue";
 // import echarts from 'echarts' // echarts 4的引入方式
 import * as echarts from "echarts"; // echarts 5的引入方式
 import "./assets/china";
+import { geoCoordMap } from './assets/geoMap'
 const store = useStore();
 
-store.getList();
+onMounted(async () => {
+  await store.getList();
+  const city = store.list.diseaseh5Shelf.areaTree[0].children
+  const data = city.map(v=>{
+    console.log(v.name, geoCoordMap[v.name].concat(v.total.nowConfirm));
+    return {
+      name: v.name,
+      value: geoCoordMap[v.name].concat(v.total.nowConfirm)
+    }
+  })
+  console.log(city);
+  
 
-onMounted(() => {
   const charts = echarts.init(document.querySelector("#china") as HTMLElement);
-
-  var data = [
-    {
-      name: "内蒙古",
-      itemStyle: {
-        areaColor: "#56b1da",
-      },
-      value: [110.3467, 41.4899],
-    },
-  ];
 
   charts.setOption({
     // backgroundColor: "black",
@@ -42,7 +43,6 @@ onMounted(() => {
       layoutCenter: ["50%", "50%"],
       layoutSize: "120%",
       itemStyle: {
-        // normal: {
         areaColor: {
           type: "linear-gradient",
           x: 0,
@@ -65,7 +65,6 @@ onMounted(() => {
         shadowOffsetX: 0,
         shadowOffsetY: 15,
         opacity: 0.5,
-        // },
       },
       emphasis: {
         areaColor: "#0f5d9d",
@@ -76,13 +75,11 @@ onMounted(() => {
           itemStyle: {
             areaColor: "rgba(0, 10, 52, 1)",
             borderColor: "rgba(0, 10, 52, 1)",
-            // normal: {
             opacity: 0,
             label: {
               show: false,
               color: "#009cc9",
             },
-            // },
           },
           label: {
             show: false,
@@ -114,11 +111,9 @@ onMounted(() => {
           fontSize: 12,
         },
         itemStyle: {
-          // normal: {
           areaColor: "#0c3653",
           borderColor: "#1cccff",
           borderWidth: 1.8,
-          // },
         },
         emphasis: {
           areaColor: "#56b1da",
@@ -132,22 +127,20 @@ onMounted(() => {
       {
         type: "scatter",
         coordinateSystem: "geo",
-        //   symbol: 'image://http://ssq168.shupf.cn/data/biaoji.png',
-        // symbolSize: [30,120],
-        // symbolOffset:[0, '-40%'] ,
         // 数字角标，气泡样式
         symbol: "pin",
         symbolSize: [45, 45],
         label: {
           // 数字显示
-          // normal: {
           show: true,
-          // },
+          color: '#fff',
+          // 显示数据
+          formatter (value:any) {
+            return value.data.value[2]
+          }
         },
         itemStyle: {
-          // normal: {
-          color: "#D8BC37", //标志颜色
-          // },
+          color: "#1E90FF", //标志颜色
         },
         data: data,
       },
