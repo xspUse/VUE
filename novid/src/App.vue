@@ -38,6 +38,7 @@
         </section>
       </div>
       <div class="box-left-pie"></div>
+      <div class="box-left-line"></div>
     </div>
     <div id="china" class="box-center"></div>
     <div style="color: white" class="box-right">
@@ -83,6 +84,7 @@ onMounted(async () => {
   await store.getList();
   initCharts();
   initPie();
+  initLine()
 });
 
 const initCharts = () => {
@@ -220,7 +222,6 @@ const initPie = () => {
   const charts = echarts.init(
     document.querySelector(".box-left-pie") as HTMLElement
   );
-  console.log(store.cityDetail);
   
   charts.setOption({
     backgroundColor: "#223651",
@@ -257,6 +258,49 @@ const initPie = () => {
     ],
   });
 };
+
+const initLine = () => {
+  // 获取元素
+  const charts = echarts.init(
+    document.querySelector(".box-left-line") as HTMLElement
+  );
+  charts.setOption({
+    backgroundColor: "#223651",
+    // 鼠标划上去有提示
+    
+    tooltip: {
+      trigger: 'axis'
+    },
+    xAxis: {
+      type: 'category',
+      data: store.cityDetail.map(v=>v.city),
+      // 线条颜色
+      axisLine: {
+        lineStyle: {
+          color: "#fff"
+        }
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: {
+        lineStyle: {
+          color: "#fff"
+        }
+      }
+    },
+    label: {
+      show: true
+    },
+    series: [
+      {
+        data: store.cityDetail.map(v=>v.local_confirm_add),
+        type: 'line',
+        smooth: true
+      }
+    ]
+  })
+}
 </script>
 
 <style lang="less">
@@ -293,6 +337,7 @@ body,
   height: 100%;
   display: flex;
   overflow: hidden;
+  padding: 10px;
   &-left {
     width: 400px;
     &-card {
@@ -316,7 +361,11 @@ body,
       }
     }
     &-pie {
-      height: 350px;
+      height: 320px;
+      margin-top: 20px;
+    }
+    &-line {
+      height: 320px;
       margin-top: 20px;
     }
   }
