@@ -3,6 +3,12 @@ import express, {Express, Router, Request, Response} from 'express'
 import axios from 'axios'
 const app:Express = express()
 
+// 允许任何请求
+app.use('*',(req,res,next)=>{
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
+
 const router:Router = express.Router()
 
 app.use('/api', router)
