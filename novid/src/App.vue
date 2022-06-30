@@ -6,7 +6,28 @@
   >
     <div class="box-left"></div>
     <div id="china" class="box-center"></div>
-    <div class="box-right"></div>
+    <div style="color:white" class="box-right">
+      <table class="table" cellspacing="0" border="1">
+        <thead>
+          <tr>
+            <th>地区</th>
+            <th>新增确诊</th>
+            <th>累计确诊</th>
+            <th>治愈</th>
+            <th>死亡</th>
+          </tr>
+        </thead>
+        <transition-group enter-active-class="animate__animated animate__flipInY" tag="tbody">
+          <tr :key="item.name" v-for="item in store.item">
+            <td align="center">{{item.name}}</td>
+            <td align="center">{{item.today.confirm}}</td>
+            <td align="center">{{item.total.confirm}}</td>
+            <td align="center">{{item.total.heal}}</td>
+            <td align="center">{{item.total.dead}}</td>
+          </tr>
+        </transition-group>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -18,21 +39,23 @@ import { onMounted } from "vue";
 import * as echarts from "echarts"; // echarts 5的引入方式
 import "./assets/china";
 import { geoCoordMap } from './assets/geoMap'
+import 'animate.css'
 const store = useStore();
 
 onMounted(async () => {
   await store.getList();
+  initCharts()
+});
+
+const initCharts = () => {
   const city = store.list.diseaseh5Shelf.areaTree[0].children
   const data = city.map(v=>{
-    console.log(v.name, geoCoordMap[v.name].concat(v.total.nowConfirm));
     return {
       name: v.name,
-      value: geoCoordMap[v.name].concat(v.total.nowConfirm)
+      value: geoCoordMap[v.name].concat(v.total.nowConfirm),
+      children: v.children
     }
   })
-  console.log(city);
-  
-
   const charts = echarts.init(document.querySelector("#china") as HTMLElement);
 
   charts.setOption({
@@ -41,7 +64,7 @@ onMounted(async () => {
       map: "china",
       aspectScale: 0.8,
       layoutCenter: ["50%", "50%"],
-      layoutSize: "120%",
+      layoutSize: "100%", // 地图背影图大小
       itemStyle: {
         areaColor: {
           type: "linear-gradient",
@@ -92,11 +115,10 @@ onMounted(async () => {
     series: [
       {
         type: "map",
-        selectedMode: "multiple",
         map: "china",
         aspectScale: 0.8,
         layoutCenter: ["50%", "50%"], //地图位置
-        layoutSize: "120%",
+        layoutSize: "100%", // 地图实图大小
         zoom: 1, //当前视角的缩放比例
         // roam: true, //是否开启平游或缩放
         scaleLimit: {
@@ -146,13 +168,33 @@ onMounted(async () => {
       },
     ],
   });
-});
+  // 监听事件
+  charts.on('click',(e:any) => {
+    console.log(e);
+    store.item = e.data.children
+  })
+}
 </script>
 
 <style lang="less">
 * {
   padding: 0;
   margin: 0;
+}
+.table {
+  width: 100%;
+  background: #212028;
+  tr {
+    th {
+      padding: 5px;
+      white-space: nowrap;
+    }
+    td {
+      padding: 5px 10px;
+      width: 100px;
+      white-space: nowrap;
+    }
+  }
 }
 // scoped要去除
 html,
@@ -166,13 +208,13 @@ body,
   display: flex;
   overflow: hidden;
   &-left {
-    width: 300px;
+    width: 350px;
   }
   &-center {
     flex: 1;
   }
   &-right {
-    width: 300px;
+    width: 350px;
   }
 }
 </style>
