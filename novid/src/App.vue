@@ -4,7 +4,40 @@
     style="background-size: cover"
     class="box"
   >
-    <div class="box-left"></div>
+    <div style="color: white" class="box-left">
+      <div class="box-left-card">
+        <section>
+          <div>较上日+ {{store.chinaAdd.localConfirmH5}}</div>
+          <div>{{ store.chinaTotal.localConfirm }}</div>
+          <div>本土现有确诊</div>
+        </section>
+        <section>
+          <div>较上日+ {{store.chinaAdd.nowConfirm}}</div>
+          <div>{{ store.chinaTotal.nowConfirm }}</div>
+          <div>现有确诊</div>
+        </section>
+        <section>
+          <div>较上日+ {{store.chinaAdd.confirm}}</div>
+          <div>{{ store.chinaTotal.confirm }}</div>
+          <div>累计确诊</div>
+        </section>
+        <section>
+          <div>较上日+ {{store.chinaAdd.noInfect}}</div>
+          <div>{{ store.chinaTotal.noInfect }}</div>
+          <div>无症状感染者</div>
+        </section>
+        <section>
+          <div>较上日+ {{store.chinaAdd.importedCase}}</div>
+          <div>{{ store.chinaTotal.importedCase }}</div>
+          <div>境外输入</div>
+        </section>
+        <section>
+          <div>较上日+ {{store.chinaAdd.dead}}</div>
+          <div>{{ store.chinaTotal.dead }}</div>
+          <div>累计死亡</div>
+        </section>
+      </div>
+    </div>
     <div id="china" class="box-center"></div>
     <div style="color:white" class="box-right">
       <table class="table" cellspacing="0" border="1">
@@ -49,6 +82,9 @@ onMounted(async () => {
 
 const initCharts = () => {
   const city = store.list.diseaseh5Shelf.areaTree[0].children
+  
+  store.item = city[4].children
+
   const data = city.map(v=>{
     return {
       name: v.name,
@@ -181,6 +217,9 @@ const initCharts = () => {
   padding: 0;
   margin: 0;
 }
+@itemColor: #41b0db;
+@itemBg: #223651;
+@itemBorder: #212028;
 .table {
   width: 100%;
   background: #212028;
@@ -208,13 +247,33 @@ body,
   display: flex;
   overflow: hidden;
   &-left {
-    width: 350px;
+    width: 400px;
+    &-card {
+      display: grid;
+      // 写几个数据就是几列
+      grid-template-columns: auto auto auto;
+      // 写几个数据就是几行
+      grid-template-rows: auto auto;
+      section {
+        background: @itemBg;
+        border: 1px solid @itemBorder;
+        padding: 10px;
+        flex-direction: column;
+        align-items: center;
+        div:nth-child(2){
+          color: @itemColor;
+          padding: 10px 0;
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+    }
   }
   &-center {
     flex: 1;
   }
   &-right {
-    width: 350px;
+    width: 400px;
   }
 }
 </style>
