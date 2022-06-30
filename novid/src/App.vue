@@ -7,39 +7,40 @@
     <div style="color: white" class="box-left">
       <div class="box-left-card">
         <section>
-          <div>较上日+ {{store.chinaAdd.localConfirmH5}}</div>
+          <div>较上日+ {{ store.chinaAdd.localConfirmH5 }}</div>
           <div>{{ store.chinaTotal.localConfirm }}</div>
           <div>本土现有确诊</div>
         </section>
         <section>
-          <div>较上日+ {{store.chinaAdd.nowConfirm}}</div>
+          <div>较上日+ {{ store.chinaAdd.nowConfirm }}</div>
           <div>{{ store.chinaTotal.nowConfirm }}</div>
           <div>现有确诊</div>
         </section>
         <section>
-          <div>较上日+ {{store.chinaAdd.confirm}}</div>
+          <div>较上日+ {{ store.chinaAdd.confirm }}</div>
           <div>{{ store.chinaTotal.confirm }}</div>
           <div>累计确诊</div>
         </section>
         <section>
-          <div>较上日+ {{store.chinaAdd.noInfect}}</div>
+          <div>较上日+ {{ store.chinaAdd.noInfect }}</div>
           <div>{{ store.chinaTotal.noInfect }}</div>
           <div>无症状感染者</div>
         </section>
         <section>
-          <div>较上日+ {{store.chinaAdd.importedCase}}</div>
+          <div>较上日+ {{ store.chinaAdd.importedCase }}</div>
           <div>{{ store.chinaTotal.importedCase }}</div>
           <div>境外输入</div>
         </section>
         <section>
-          <div>较上日+ {{store.chinaAdd.dead}}</div>
+          <div>较上日+ {{ store.chinaAdd.dead }}</div>
           <div>{{ store.chinaTotal.dead }}</div>
           <div>累计死亡</div>
         </section>
       </div>
+      <div class="box-left-pie"></div>
     </div>
     <div id="china" class="box-center"></div>
-    <div style="color:white" class="box-right">
+    <div style="color: white" class="box-right">
       <table class="table" cellspacing="0" border="1">
         <thead>
           <tr>
@@ -50,13 +51,16 @@
             <th>死亡</th>
           </tr>
         </thead>
-        <transition-group enter-active-class="animate__animated animate__flipInY" tag="tbody">
+        <transition-group
+          enter-active-class="animate__animated animate__flipInY"
+          tag="tbody"
+        >
           <tr :key="item.name" v-for="item in store.item">
-            <td align="center">{{item.name}}</td>
-            <td align="center">{{item.today.confirm}}</td>
-            <td align="center">{{item.total.confirm}}</td>
-            <td align="center">{{item.total.heal}}</td>
-            <td align="center">{{item.total.dead}}</td>
+            <td align="center">{{ item.name }}</td>
+            <td align="center">{{ item.today.confirm }}</td>
+            <td align="center">{{ item.total.confirm }}</td>
+            <td align="center">{{ item.total.heal }}</td>
+            <td align="center">{{ item.total.dead }}</td>
           </tr>
         </transition-group>
       </table>
@@ -71,27 +75,28 @@ import { onMounted } from "vue";
 // import echarts from 'echarts' // echarts 4的引入方式
 import * as echarts from "echarts"; // echarts 5的引入方式
 import "./assets/china";
-import { geoCoordMap } from './assets/geoMap'
-import 'animate.css'
+import { geoCoordMap } from "./assets/geoMap";
+import "animate.css";
 const store = useStore();
 
 onMounted(async () => {
   await store.getList();
-  initCharts()
+  initCharts();
+  initPie();
 });
 
 const initCharts = () => {
-  const city = store.list.diseaseh5Shelf.areaTree[0].children
-  
-  store.item = city[4].children
+  const city = store.list.diseaseh5Shelf.areaTree[0].children;
 
-  const data = city.map(v=>{
+  store.item = city[4].children;
+
+  const data = city.map((v) => {
     return {
       name: v.name,
       value: geoCoordMap[v.name].concat(v.total.nowConfirm),
-      children: v.children
-    }
-  })
+      children: v.children,
+    };
+  });
   const charts = echarts.init(document.querySelector("#china") as HTMLElement);
 
   charts.setOption({
@@ -191,11 +196,11 @@ const initCharts = () => {
         label: {
           // 数字显示
           show: true,
-          color: '#fff',
+          color: "#fff",
           // 显示数据
-          formatter (value:any) {
-            return value.data.value[2]
-          }
+          formatter(value: any) {
+            return value.data.value[2];
+          },
         },
         itemStyle: {
           color: "#1E90FF", //标志颜色
@@ -205,11 +210,53 @@ const initCharts = () => {
     ],
   });
   // 监听事件
-  charts.on('click',(e:any) => {
+  charts.on("click", (e: any) => {
     console.log(e);
-    store.item = e.data.children
-  })
-}
+    store.item = e.data.children;
+  });
+};
+
+const initPie = () => {
+  const charts = echarts.init(
+    document.querySelector(".box-left-pie") as HTMLElement
+  );
+  console.log(store.cityDetail);
+  
+  charts.setOption({
+    backgroundColor: "#223651",
+    tooltip: {
+      trigger: "item",
+    },
+    series: [
+      {
+        type: "pie",
+        radius: ["40%", "70%"],
+        // false文字超出界限，默认为true，显示 ...
+        // avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 4,
+          borderColor: "#fff",
+          borderWidth: 2,
+        },
+        label: {
+          show: true,
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: "15",
+          },
+        },
+        data: store.cityDetail.map(v=>{
+          return {
+            name: v.city,
+            value: v.local_confirm_add
+          }
+        })
+      },
+    ],
+  });
+};
 </script>
 
 <style lang="less">
@@ -260,13 +307,17 @@ body,
         padding: 10px;
         flex-direction: column;
         align-items: center;
-        div:nth-child(2){
+        div:nth-child(2) {
           color: @itemColor;
           padding: 10px 0;
           font-size: 20px;
           font-weight: bold;
         }
       }
+    }
+    &-pie {
+      height: 350px;
+      margin-top: 20px;
     }
   }
   &-center {
